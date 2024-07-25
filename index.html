@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joel's Goals</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <h1>Quote of the Day</h1>
+        <p>"If patience wasn't so easily tested, then it would hardly be a virtue..." &mdash;Count Rostov</p>
+    </header>
+
+    <div class="app-container">
+        <div class="dashboard">
+            <h2>Dashboard</h2>
+            <button id="create-new">Create New Goal</button>
+            <div class="goal-list-container">
+                <h3>Your Goals</h3>
+                <ul id="goal-list">
+                    <!-- Goals will be dynamically added here -->
+                </ul>
+            </div>
+        </div>
+
+        <div class="goal-form-container">
+            <form class="goal-form">
+                <h2>New Goal</h2>
+                <label for="goal-title">Objective:</label>
+                <input type="text" id="goal-title" name="goal-title" required>
+
+                <label for="goal-description">Plan of Attack:</label>
+                <textarea id="goal-description" name="goal-description" rows="4" required></textarea>
+
+                <label for="goal-deadline">Deadline:</label>
+                <input type="date" id="goal-deadline" name="goal-deadline" required>
+
+                <button type="submit" id="submit">Add Goal</button>
+                <button type="button" id="cancel">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+
+body {
+    font-family: "Roboto", sans-serif;
+    background: linear-gradient(45deg, #092215, #006769);
+    height: 100vh;
+    color: white;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.app-container {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 2rem;
+    padding: 2rem;
+    flex-grow: 1;
+}
+
+.dashboard {
+    background-color: rgba(245, 245, 245, 0.788);
+    border-radius: 1rem;
+    padding: 2rem;
+    color: #092215;
+}
+
+.dashboard h2 {
+    margin-top: 0;
+}
+
+.dashboard button {
+    background-color: #092215;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    font-size: 1rem;
+    font-family: "Roboto", sans-serif;
+    margin-bottom: 1rem;
+}
+
+.dashboard button:hover {
+    background-color: #006769;
+}
+
+.goal-list-container {
+    background-color: rgba(1, 73, 49, 0.582);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    overflow-y: auto;
+    margin-top: auto;
+
+}
+
+.goal-list-container h3 {
+    color: rgb(220, 245, 237);
+}
+
+.goal-list-container ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.goal-list-container ul li {
+    background-color: #092215;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    margin-bottom: 0.5rem;
+    color: white;
+}
+
+.goal-form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(245, 245, 245, 0.788);
+    border-radius: 1rem;
+    max-height: 40rem;
+    padding: 1rem;
+    color: #092215;
+}
+
+.goal-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    background-color: #092215;
+    border-radius: 0.5rem;
+    max-width: 40rem;
+    width: 100%;
+    padding: 2rem;
+    box-sizing: border-box;
+}
+
+.goal-form h2 {
+    color: rgb(220, 245, 237);
+    font-size: 2rem;
+    margin-top: 0;
+}
+
+.goal-form label {
+    margin-bottom: 0.25rem;
+    color: white;
+    font-size: 1.1rem;
+}
+
+.goal-form input, 
+.goal-form textarea {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 0.1rem solid #ccc;
+    border-radius: 0.25rem;
+    box-sizing: border-box;
+    font-family:"Roboto", sans-serif;
+}
+
+.goal-form button {
+    background-color: rgb(252, 114, 160);
+    border: none;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    font-size: 1rem;
+    font-family: "Roboto", sans-serif;
+}
+
+.goal-form button#cancel {
+    background-color: white;
+    color:rgb(233, 98, 145);
+}
+
+.goal-form button#cancel:hover {
+    background-color: rgb(151, 5, 54);
+    color: white;
+}
+
+.goal-form button:hover {
+    background-color: rgb(233, 98, 145);
+}
