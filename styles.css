@@ -77,11 +77,34 @@ header {
 }
 
 .goal-list-container ul li {
-    background-color: #092215;
+    background-color: rgb(9, 34, 21);
     padding: 0.5rem;
     border-radius: 0.25rem;
     margin-bottom: 0.5rem;
     color: white;
+    font-weight: bold;
+}
+
+.goal-list-container .goal-description {
+    font-weight: normal;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.goal-list-container ul li.expanded {
+    display: block;
+}
+
+.goal-list-container ul li .complete-button {
+    background-color: rgb(252, 114, 160);
+    color: white;
+    border:white;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    font-size: 0.75rem;
+
 }
 
 .goal-form-container {

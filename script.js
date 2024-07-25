@@ -1,6 +1,6 @@
-// begin when DOM loads
+
 document.addEventListener('DOMContentLoaded', () => {
-    // create variables for each element
+
     const goalForm = document.querySelector('.goal-form');
     const goalList = document.getElementById('goal-list');
     const createNewButton = document.getElementById('create-new');
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const deadline = document.getElementById('goal-deadline').value;
 
         if (title && description && deadline) {
-            const goal = { title, description, deadline };
+            const goal = { title, description, deadline };  // save as an object
             addGoalToList(goal);
             saveGoal(goal);
             goalForm.reset();
@@ -31,15 +31,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function addGoalToList(goal) {
+        // make the goal as a list element
         const li = document.createElement('li');
-        li.textContent = `${goal.title} - ${goal.deadline}`;
+        li.textContent = `${goal.title} - ${goal.deadline}`
+        
+        // separate element for description (expandable)
+        const description = document.createElement('div');
+        description.textContent = goal.description;
+        description.className = 'goal-description';
 
         // delete functionality
-        const deleteButton = document.createElement('button');
-        deleteButton.textContent = 'Delete';
-        deleteButton.className = 'delete-button';
-        deleteButton.addEventListener('click', (event) => {
-            event.stopPropagation();
+        const completeButton = document.createElement('button');
+        completeButton.textContent = 'Complete!';
+        completeButton.className = 'complete-button';
+        completeButton.addEventListener('click', () => {
             removeGoal(goal, li);
         });
 
@@ -48,15 +53,12 @@ document.addEventListener('DOMContentLoaded', () => {
         li.addEventListener('click', () => {
             li.classList.toggle('expanded');
             if (li.classList.contains('expanded')) {
-                li.innerHTML = `
-                <strong>${goal.title}</strong><br>
-                <em>${goal.deadline}</em><br>
-                ${goal.description}
-                `;
+                li.appendChild(description);
+                li.appendChild(completeButton);
             } else {
-                li.textContent = `${goal.title} - ${goal.deadline}`;
+                li.removeChild(description);
+                li.removeChild(completeButton);
             }
-            li.appendChild(deleteButton);
         });
 
         goalList.appendChild(li);
