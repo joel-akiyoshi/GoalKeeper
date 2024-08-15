@@ -1,3 +1,67 @@
+/*
+class QuoteDataStore {
+    fetch() {
+        // time logic can be put here too. "caching, storing the timestamps"
+        return "if patience...";
+        // asynchronous: look at xmlhttp
+    }
+
+    fetch2(callBack) {  // callback is a function 
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", "quotes.com", true);
+        xhr.onload = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {  // good case
+                  console.log(xhr.responseText);
+                  callBack(xhr.responseText)  // param is the quote
+                } else {  // bad case
+                  console.error(xhr.statusText);
+                }
+              }
+        }
+    };
+}
+*/
+
+class GoalDataStore {
+    // methods relating to localStorage
+    constructor() {
+        // upon instantiation, make a goalsArray attribute
+        let goalsJson = localStorage.getItem("goals");
+        this.goalsArray = goalsJson ? JSON.parse(goalsJson) : [];
+    }
+
+    removeGoal(goal) {
+        this.goalsArray = this.goalsArray.filter(
+            g => !(g.title === goal.title && g.deadline === goal.deadline && g.description === goal.description)
+        );
+        localStorage.setItem('goals', JSON.stringify(this.goalsArray));
+    }
+
+    saveGoal(goal) {
+        this.goalsArray.push(goal);
+        localStorage.setItem('goals', JSON.stringify(this.goalsArray));
+    }
+
+    getGoalsArray() {
+        return this.goalsArray;
+    }
+}
+
+
+class Goal {
+    // properties (title, deadline, description)
+    constructor(title, deadline, description) {
+        this.title = title;
+        this.deadline = deadline;
+        this.description = description;
+    }
+    
+    isValid() {  // returns boolean
+        return this.title && this.deadline && this.description;
+    }
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -6,30 +70,48 @@ document.addEventListener('DOMContentLoaded', () => {
     const createNewButton = document.getElementById('create-new');
     const cancelButton = document.getElementById('cancel');
 
+    const goalDataStore = new GoalDataStore();
+
+    // const quoteDataStore = new QuoteDataStore();
+
+    /*
+    function handleQuote(quote) {
+         // document.getElementById('example');
+         // update the UI with quote
+         // "update the UI" can be a lot of things. More than just replacing an HTML tag. Processing
+    }
+
+    quoteDataStore.fetch2(handleQuote)  // access the HTML location, call quoteDataStore.fetch()
+    */
+
+    // show goalbox
     createNewButton.addEventListener('click', () => {
         document.querySelector('.goal-form-container').style.display = 'flex';
     });
 
+    // hide goalbox
     cancelButton.addEventListener('click', () => {
         document.querySelector('.goal-form-container').style.display = 'none';
     });
 
+    // submit the form
     goalForm.addEventListener('submit', (event) => {
-        // prevents from reloading
-        event.preventDefault()
+        event.preventDefault()  // prevents reload
         const title = document.getElementById('goal-title').value;
         const description = document.getElementById('goal-description').value;
         const deadline = document.getElementById('goal-deadline').value;
 
-        if (title && description && deadline) {
-            const goal = { title, description, deadline };  // save as an object
-            addGoalToList(goal);
-            saveGoal(goal);
+        let goal = new Goal(title, deadline, description);
+        if ( goal.isValid() ) {
+            goalDataStore.saveGoal(goal);  // update localStorage
+            addGoalToList(goal);  // update UI
             goalForm.reset();
             document.querySelector('.goal-form-container').style.display = 'none';
         }
+
     });
 
+    // Updates the UI with new goal element, builds in deletion capability
     function addGoalToList(goal) {
         // make the goal as a list element
         const li = document.createElement('li');
@@ -39,15 +121,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const description = document.createElement('div');
         description.textContent = goal.description;
         description.className = 'goal-description';
-
-        // delete functionality
+        
+        // complete-goal functionality
         const completeButton = document.createElement('button');
         completeButton.textContent = 'Complete!';
         completeButton.className = 'complete-button';
         completeButton.addEventListener('click', () => {
-            removeGoal(goal, li);
+            goalDataStore.removeGoal(goal);  // update localStorage
+            goalList.removeChild(li);  // update UI
         });
-
 
         // expansion functionality
         li.addEventListener('click', () => {
@@ -63,40 +145,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
         goalList.appendChild(li);
     }
-
-    function removeGoal(goal, li) {
-        let goals = localStorage.getItem('goals');
-        if (goals) {
-            goals = JSON.parse(goals);
-
-            goals = goals.filter(g => !(g.title == goal.title && g.deadline == goal.deadline && g.description == goal.description));
-            
-            // remove from localStorage (replace localStorage value)
-            localStorage.setItem('goals', JSON.stringify(goals));
-
-            // remove from the UI
-            goalList.removeChild(li);
-        }
-    }
-
-    function saveGoal(goal) {
-        let goals = localStorage.getItem('goals');
-        if (goals) {
-            goals = JSON.parse(goals);
-        } else {
-            goals = [];
-        }
-        goals.push(goal);
-        localStorage.setItem('goals', JSON.stringify(goals));
-    }
-
-    function loadGoals() {
-        let goals = localStorage.getItem('goals');
-        if (goals) {
-            goals = JSON.parse(goals);
-            goals.forEach(goal => addGoalToList(goal));
-        }
-    }
-
-    loadGoals();
 });
