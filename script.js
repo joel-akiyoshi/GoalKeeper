@@ -23,11 +23,25 @@ class QuoteDataStore {
 }
 */
 
+class Goal {
+    // properties (title, deadline, description)
+    constructor(title, deadline, description) {
+        this.title = title;
+        this.deadline = deadline;
+        this.description = description;
+    }
+    
+    isValid() {  // returns boolean
+        return this.title && this.deadline && this.description;
+    }
+}
+
+
 class GoalDataStore {
     // methods relating to localStorage
     constructor() {
         // upon instantiation, make a goalsArray attribute
-        let goalsJson = localStorage.getItem("goals");
+        let goalsJson = localStorage.getItem('goals');
         this.goalsArray = goalsJson ? JSON.parse(goalsJson) : [];
     }
 
@@ -49,73 +63,56 @@ class GoalDataStore {
 }
 
 
-class Goal {
-    // properties (title, deadline, description)
-    constructor(title, deadline, description) {
-        this.title = title;
-        this.deadline = deadline;
-        this.description = description;
-    }
-    
-    isValid() {  // returns boolean
-        return this.title && this.deadline && this.description;
-    }
-}
+class GoalKeeperUI {
+    constructor(goalDataStore) {
+        this.goalDataStore = goalDataStore;
+        this.goalForm = document.querySelector('.goal-form');
+        this.goalList = document.getElementById('goal-list');
+        this.createNewButton = document.getElementById('create-new');
+        this.cancelButton = document.getElementById('cancel');
 
-
-document.addEventListener('DOMContentLoaded', () => {
-
-    const goalForm = document.querySelector('.goal-form');
-    const goalList = document.getElementById('goal-list');
-    const createNewButton = document.getElementById('create-new');
-    const cancelButton = document.getElementById('cancel');
-
-    const goalDataStore = new GoalDataStore();
-
-    // const quoteDataStore = new QuoteDataStore();
-
-    /*
-    function handleQuote(quote) {
-         // document.getElementById('example');
-         // update the UI with quote
-         // "update the UI" can be a lot of things. More than just replacing an HTML tag. Processing
+        this.setupEventListeners();
+        this.loadStoredGoals();
     }
 
-    quoteDataStore.fetch2(handleQuote)  // access the HTML location, call quoteDataStore.fetch()
-    */
+    setupEventListeners() {
+        // show goalbox
+        this.createNewButton.addEventListener('click', () => {
+            document.querySelector('.goal-form-container').style.display = 'flex';
+        });
 
-    // show goalbox
-    createNewButton.addEventListener('click', () => {
-        document.querySelector('.goal-form-container').style.display = 'flex';
-    });
-
-    // hide goalbox
-    cancelButton.addEventListener('click', () => {
-        document.querySelector('.goal-form-container').style.display = 'none';
-    });
-
-    // submit the form
-    goalForm.addEventListener('submit', (event) => {
-        event.preventDefault()  // prevents reload
-        const title = document.getElementById('goal-title').value;
-        const description = document.getElementById('goal-description').value;
-        const deadline = document.getElementById('goal-deadline').value;
-
-        let goal = new Goal(title, deadline, description);
-        if ( goal.isValid() ) {
-            goalDataStore.saveGoal(goal);  // update localStorage
-            addGoalToList(goal);  // update UI
-            goalForm.reset();
+        // hide goalbox
+        this.cancelButton.addEventListener('click', () => {
             document.querySelector('.goal-form-container').style.display = 'none';
-        }
+        });
 
-    });
+        // submit the form
+        this.goalForm.addEventListener('submit', (event) => {
+            event.preventDefault()  // prevents reload
+            const title = document.getElementById('goal-title').value;
+            const description = document.getElementById('goal-description').value;
+            const deadline = document.getElementById('goal-deadline').value;
 
-    // Updates the UI with new goal element, builds in deletion capability
-    function addGoalToList(goal) {
+            let goal = new Goal(title, deadline, description);
+            if ( goal.isValid() ) {
+                this.goalDataStore.saveGoal(goal);  // update localStorage
+                this.addGoalToList(goal);  // update UI
+                this.goalForm.reset();
+                this.document.querySelector('.goal-form-container').style.display = 'none';
+            }
+
+        });
+    }
+
+    loadStoredGoals() {
+        const storedGoals = this.goalDataStore.getGoalsArray();
+        storedGoals.forEach(goal => this.addGoalToList(goal));
+    }
+
+    addGoalToList(goal) {
         // make the goal as a list element
         const li = document.createElement('li');
-        li.textContent = `${goal.title} - ${goal.deadline}`
+        li.textContent = `${goal.title} - ${goal.deadline}`;
         
         // separate element for description (expandable)
         const description = document.createElement('div');
@@ -127,8 +124,8 @@ document.addEventListener('DOMContentLoaded', () => {
         completeButton.textContent = 'Complete!';
         completeButton.className = 'complete-button';
         completeButton.addEventListener('click', () => {
-            goalDataStore.removeGoal(goal);  // update localStorage
-            goalList.removeChild(li);  // update UI
+            this.goalDataStore.removeGoal(goal);  // update localStorage
+            this.goalList.removeChild(li);  // update UI
         });
 
         // expansion functionality
@@ -143,6 +140,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        goalList.appendChild(li);
+        this.goalList.appendChild(li);
     }
+
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const goalDataStore = new GoalDataStore();
+    const goalKeeperUI = new GoalKeeperUI(goalDataStore);
 });
