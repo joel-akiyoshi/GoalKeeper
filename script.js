@@ -23,6 +23,7 @@ class QuoteDataStore {
 }
 */
 
+
 class Goal {
     // properties (title, deadline, description)
     constructor(title, deadline, description) {
@@ -37,8 +38,8 @@ class Goal {
 }
 
 
+// handles localStorage
 class GoalDataStore {
-    // methods relating to localStorage
     constructor() {
         // upon instantiation, make a goalsArray attribute
         let goalsJson = localStorage.getItem('goals');
@@ -64,8 +65,14 @@ class GoalDataStore {
 
 
 class GoalKeeperUI {
+    // attributes of the UI are the elements
     constructor(goalDataStore) {
         this.goalDataStore = goalDataStore;
+        this.mode = 'add';
+        this.currentEditGoal = null;
+        this.currentEditLi = null;
+        
+        this.formContainer = document.querySelector('.goal-form-container');
         this.goalForm = document.querySelector('.goal-form');
         this.goalList = document.getElementById('goal-list');
         this.createNewButton = document.getElementById('create-new');
@@ -86,19 +93,30 @@ class GoalKeeperUI {
             document.querySelector('.goal-form-container').style.display = 'none';
         });
 
-        // submit the form
+        // submit the form and add a new event listener
         this.goalForm.addEventListener('submit', (event) => {
             event.preventDefault()  // prevents reload
             const title = document.getElementById('goal-title').value;
             const description = document.getElementById('goal-description').value;
             const deadline = document.getElementById('goal-deadline').value;
 
+            // if the mode is in editing
+                // remove the old from the UI (using removeChild goalForm and the stored li)
+                // remove the old from the datastore (using removeGoal and the stored Goal)
+                // turn off editing mode
+
+            if ( this.mode === 'edit' ) {
+                this.goalList.removeChild(this.currentEditLi);
+                this.goalDataStore.removeGoal(this.currentEditGoal);
+                this.mode = 'add';
+            }
+
             let goal = new Goal(title, deadline, description);
             if ( goal.isValid() ) {
                 this.goalDataStore.saveGoal(goal);  // update localStorage
                 this.addGoalToList(goal);  // update UI
                 this.goalForm.reset();
-                this.document.querySelector('.goal-form-container').style.display = 'none';
+                document.querySelector('.goal-form-container').style.display = 'none';
             }
 
         });
@@ -133,20 +151,41 @@ class GoalKeeperUI {
             li.classList.toggle('expanded');
             if (li.classList.contains('expanded')) {
                 li.appendChild(description);
+                li.appendChild(editButton);
                 li.appendChild(completeButton);
+                
             } else {
                 li.removeChild(description);
+                li.removeChild(editButton);
                 li.removeChild(completeButton);
             }
         });
 
         this.goalList.appendChild(li);
-    }
 
+        // edit-goal functionality
+        const editButton = document.createElement('button');
+        editButton.textContent = 'Edit';
+        editButton.className = 'edit-button';
+        editButton.addEventListener('click', () => {
+
+        // change the mode to editing
+        // save the current goal that is being edited into a property
+        // save the current li that is being edited into a property
+        this.mode = 'edit';
+        this.currentEditGoal = goal;
+        this.currentEditLi = li;
+
+        this.formContainer.style.display = 'flex';
+        document.getElementById('goal-title').value = goal.title;
+        document.getElementById('goal-deadline').value = goal.deadline;
+        document.getElementById('goal-description').value = goal.description;
+        })
+    }
 }
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    const goalDataStore = new GoalDataStore();
-    const goalKeeperUI = new GoalKeeperUI(goalDataStore);
+    let goalDataStore = new GoalDataStore();
+    let goalKeeperUI = new GoalKeeperUI(goalDataStore);
 });

@@ -104,7 +104,16 @@ header {
     border-radius: 0.25rem;
     cursor: pointer;
     font-size: 0.75rem;
+}
 
+.goal-list-container ul li .edit-button {
+    background-color: rgb(93, 31, 238);
+    color: white;
+    border:white;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    font-size: 0.75rem;
+    margin: 0.75rem;
 }
 
 .goal-form-container {
